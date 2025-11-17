@@ -1,0 +1,730 @@
+/*
+==================================================
+   全体の設計
+==================================================
+*/
+
+/* すべての要素の余白をリセット */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 全体の基本フォントと背景色 */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f8f8f8;
+}
+
+/* ページ全体の最低画面サイズ */
+html,
+body {
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+/* homeページ専用背景画像 */
+body.home .bg-image {
+  background-image: url("/static/img/exterior.png");
+}
+
+/* innerページ専用背景画像 */
+body.inner-page .bg-image {
+  background-image: url("/static/img/stock_market_gemini.png");
+}
+
+/* 背景画像共通設定 */
+.bg-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0;
+}
+
+/*
+==================================================
+   ヘッダー
+==================================================
+*/
+
+/* ヘッダー本体（上部に固定） */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;                      /* 他のコンテンツより前面に表示 */
+
+  padding: 15px 0;
+  height: 100px;
+
+  display: flex;                      /* ヘッダー要素と検索フォーム */
+  justify-content: space-between;
+  align-items: center;
+
+  background-color: transparent;      /* 背景色を透明 */
+  transition: background-color 0.3s ease;
+}
+
+/* ヘッダー詳細設定 */
+.header-container {
+  display: flex;                      /* ヘッダー要素を横一列に配置 */
+  justify-content: space-between;
+  align-items: center;
+  max-width: 98%;
+  margin: 0 auto;
+  height: 100%;
+  width: 100%;
+}
+
+/* ロゴのリンク */
+.logo a {
+  font-weight: 700;
+  letter-spacing: 2px;
+  z-index: 10;
+  color: #000;
+  text-decoration: none;
+}
+
+/* ロゴ（常に中央配置） */
+.logo {
+  font-size: 38px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: Georgia, "Century Schoolbook", serif;
+}
+
+/* 左側グループ */
+.header-left-group {
+  display: flex;
+  align-items: center;
+  z-index: 50;
+}
+
+/* ハンバーガーメニューボタン */
+.menu-button {
+  margin: 20px;
+}
+
+
+/* PC検索トリガー */
+.pc-menu-search {
+  position: relative;
+  z-index: 60;
+  display: flex;            /* 🔍と検索を横に並べる */
+  align-items: center;
+
+  font-size: 20px;
+  padding: 10px 15px;
+  transition: opacity 0.3s, background-color 0.3s;
+  white-space: nowrap;      /* 改行させない */
+}
+
+/* 検索アイコンとラベルの余白調整 */
+.pc-menu-search i {
+  margin-right: 5px;
+}
+
+/* 検索ラベル間隔 */
+.search-label {
+  margin-left: 5px;
+}
+
+/* 右側グループ */
+.header-right{
+  font-size: 20px;
+  z-index: 50;
+  margin-right: 30px;
+}
+
+.header-right a {
+  text-decoration: none;
+  color: #000
+}
+
+/* ユーザーアイコンとラベルの余白調整 */
+.header-right i {
+  margin-right: 5px;
+}
+
+/* ヘッダーの各種アイコン */
+.header-icon{
+  font-size: 20px;
+}
+
+/* ヘッダーホバーの視覚変化 */
+.header:hover {
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* JSで使用する設定 */
+.header.is-scrolled {
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* キーワード入力（入力欄・ボタン） */
+.search-input-field {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+
+  opacity: 0;               /* 要素を透明化 */
+  visibility: hidden;       /* 要素を非表示にする */
+  transition: opacity 0.3s, visibility 0.3s;
+  z-index: 1001;
+
+  display: flex;            /* 左右中央に配置 */
+  justify-content: center;
+  align-items: center;
+  padding: 0 20px;
+}
+
+/* 検索入力本体（PC全画面モード用） */
+.search-input-field .search-input {
+  flex: 1;
+  max-width: 400px;
+  padding: 10px 15px;
+  font-size: 16px;
+  background-color: #F5F2F2;
+  border: 1px solid #007bff;
+  border-right: none;
+  border-radius: 20px 0 0 20px;       /* 角を丸くする */
+  outline: none;                      /* フォーカス時のデフォルト線を消す */
+}
+
+/* 検索ボタン（入力フィールドと一体化した丸角デザイン） */
+.search-input-field button {
+  padding: 10px 20px;
+  font-size: 16px;
+
+  border: 1.1px solid #007bff;
+  border-radius: 0 20px 20px 0;       /* 角を丸くする */
+  border-left: none;
+
+  background-color: #BDE8F5;
+  color: #000;
+}
+
+/* 検索ボタンホバーエフェクト */
+.search-input-field button:hover {
+  background-color: #007bff;
+  border: 2px solid #007bff;
+  color: #fff;
+}
+
+/* 検索フィールドアクティブ時の可視化 */
+.search-input-field.is-active {
+  opacity: 1;             /* 透明化を解除 */
+  visibility: visible;    /* 非表示から再表示へ */
+}
+
+/* 検索入力フォーカス時（背景白で入力中を強調） */
+.search-input:focus {
+  background-color: #fff;
+}
+
+/*
+==================================================
+   スライドメニュー
+==================================================
+*/
+
+/* スライドメニュー本体 */
+.slide-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 100vh;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 2000;                      /* どの要素よりも最前面 */
+  transform: translateX(-100%);       /* 画面の外にはみ出すことで通常時は非表示 */
+  transition: transform 0.3s ease-out;
+
+  background-color: white;
+  padding: 80px 30px 20px;
+}
+
+/* メニューリスト初期化 */
+.menu-list {
+  list-style: none;
+  color: #333;
+}
+
+/* メニュー項目 */
+.menu-list li {
+  padding: 13px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.menu-list a {
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 600;
+  display: block;         /* 文字以外もクリックできるようにする */
+  color: #000
+}
+
+/* 先頭項目（見出し）の区切り線除去 */
+.menu-list li:first-child {
+  border-bottom: none;
+}
+
+/* メニューセクション見出しスタイル */
+.menu-list li h3 {
+  font-size: 20px;
+  font-weight: bold;
+  border-bottom: 3px solid #007bff;
+}
+
+.slide-menu-user{
+  text-align: right;
+  font-size: 16px;
+}
+
+.slide-menu-user a{
+  text-decoration: none;
+  color: #000;
+}
+
+/* メニューオープン時の位置 */
+.slide-menu.is-open {
+  transform: translateX(0);       /* スライドメニューを元の位置に戻して表示する */
+}
+
+/* メニュー項目ホバーエフェクト */
+.slide-menu a:hover {
+  color: #007bff;
+  background: linear-gradient(transparent 60%, #d0e7ff 70%);  /* テキストにグラーデションの下線を引く */
+}
+
+/*
+==================================================
+   メイン
+==================================================
+*/
+
+/* メイン全体設定 */
+main {
+  position: relative;
+  z-index: 5;           /* 背景画像の上に表示 */
+  margin: 120px;        /* ヘッダーとの間隔を確保 */
+  padding: 20px;
+  font-size: 20px;
+}
+
+/* innerページ */
+body.inner-page main .content-wrapper {
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 20px 0;
+  border-radius: 30px;
+  width: 1000px;
+  min-height: 250px;
+  margin: 0 auto;       /* 親要素を左右中央に配置する  */
+
+  display: flex;        /* flexboxを使用して、子要素を左右中央に配置する  */
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ページタイトル */
+.content_title {
+  text-align: center;
+  margin: 30px auto 20px;
+}
+
+/* 本文コンテンツ */
+.content {
+  width: auto;
+}
+
+.main-message{
+  width: 100%;
+  margin: 15px auto;
+}
+
+/* マイページ・管理者ページのメニュー */
+.menu-link li {
+  margin: 15px 0;     /* 子要素同士の上下の間隔  */
+}
+
+/* Chart.js用チャートコンテナ */
+.chart-container {
+  position: relative;
+  width: 800px;
+  height: 400px;
+  margin: 20px auto;    /* 上下の隙間確保と左右中央に配置  */
+}
+
+/* メイン内リンク共通スタイル */
+main a {
+  color: #000;
+  text-decoration: none;
+}
+
+main a:hover {
+  font-weight: bold;
+  color: #007bff;
+}
+
+/* ページリンク（戻るリンクなど） */
+main .page_link {
+  text-align: center;
+  margin: 20px;     /* 他要素との間隔 */
+}
+
+main .page_link a {
+  margin: 10px;     /* aタグ同士の間隔 */
+}
+
+/* テーブル（銘柄一覧） */
+main table {
+  text-align: center;
+  border-collapse: collapse;  /* 下線を伸ばして直線に見せる */
+  table-layout: fixed;        /* 表の幅を文字数に左右されない */
+  width: 90%;
+  margin: 0 auto;
+}
+
+main td {
+  border-bottom: 1px solid #000;
+  padding: 10px 15px;
+}
+
+main div {
+  text-align: center;
+}
+
+main ul {
+  list-style: none;
+  text-align: left;
+  display: inline-block;
+}
+
+/* フォーム */
+main form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* ラベルと入力欄を包む1行分(pタグ)の設定 */
+main form div {
+  display: flex;            /* ラベルと入力欄を縦並びにする */
+  flex-direction: column;       
+  width: 100%;
+  min-width: 300px;
+  max-width: 500px;
+  margin-bottom: 30px;
+}
+
+main form label {     
+  margin-bottom: 6px;
+  font-weight: bold;
+  font-size: 16px;
+  text-align: left;
+}
+
+main form input,
+main form select,
+main form textarea {
+  width: 100%;
+  height: 40px;
+  padding: 0 10px;
+  margin: 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;       /* 角を丸くする */
+  box-sizing: border-box;   /* 幅計算を簡略化 */
+  font-size: 16px;
+  vertical-align: middle;
+}
+
+main form textarea {
+  height: auto;
+  padding: 10px;
+}
+
+main form button {
+  display: block;         
+  margin: 20px auto;    /* 上下に隙間を作り、左右中央に配置する */
+  padding: 10px 30px;     /* ボタンのサイズ（文字の周りの余白） */
+  height: auto;
+  background-color: #f0f0f0;
+  color: #000;
+}
+
+main form button:hover {
+  background-color: #555;
+  border: 1px solid #ccc;
+  color: #fff;
+}
+
+/* フォーム注釈テキスト */
+main .form-notes {
+  margin-top: 5px;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+  font-size: 0.8em;
+  color: #666;
+}
+
+main .err-notes {
+  color: #f00;
+  margin: 15px 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.8em;
+  white-space: nowrap;  
+}
+
+.pagination{
+  margin: 20px;
+}
+
+/*
+==================================================
+   フッター
+==================================================
+*/
+
+/* フッター全体 */
+footer {
+  position: relative;
+  width: 100%;
+  padding: 45px 0;
+  background: #222;
+  color: #fff;
+  z-index: 1;               /* 背景画像より前面に出す */
+  display: flex;            /* （メニュー・連絡先）とコピーライトを縦方向に配置 */
+  flex-direction: column;
+}
+
+/* フッター内部コンテナ（メニューと連絡先を横並び） */
+.footer-inner {
+  max-width: 960px;
+  margin: 0 auto;           /* 左右中央に配置 */
+  padding: 24px;
+  display: flex;            /* メニューと連絡先を横方向に配置 */
+  justify-content: center;
+  align-items: flex-start;  /* 要素同士を上揃え */
+  gap: 70px;
+}
+
+/* フッターカラム共通 */
+.footer-inner>div {
+  flex-grow: 1;             /* スペースを均等に使用 */
+  max-width: 350px;
+  margin: 0;
+  padding: 0;
+}
+
+.footer-inner>div h4 {
+  font-size: 1.2em;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #444;
+  padding-bottom: 5px;
+}
+
+.footer-inner>div ul {
+  padding: 0;
+  margin: 0;
+  margin-left: 15px;
+  list-style: none;
+}
+
+.footer-inner>div li {
+  padding: 5px 0;
+  position: relative;
+}
+
+.footer-inner>div a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+/* フッターボトム（コピーライト表示） */
+.footer-bottom {
+  padding: 30px 0;
+  text-align: center;
+  border-top: 1px solid #444;
+  text-align: center;
+  font-size: 0.8em;
+  color: #a0a0a0;
+  margin: auto;
+}
+
+/*
+==================================================
+   レスポンシブデザイン
+==================================================
+*/
+@media (max-width: 768px) {
+
+  /* 検索トリガー */
+  .pc-menu-search {
+    display: none;            /* モバイルでは検索欄を表示するため、トリガーを非表示 */
+  }
+
+  /* 右側グループ */
+  .header-right {
+    display: none;            /* モバイルでは非表示 */
+  }
+
+  /* ヘッダー */
+  .header {
+    height: auto;
+    padding: 0;
+    flex-direction: column;   /* 子要素を縦並び */
+    position: static;         /* 通常配置に戻す */
+  }
+
+  /* ヘッダーコンテナ */
+  .header-container {
+    width: 100%;
+    height: auto;
+    padding: 15px 20px;
+  }
+
+  /* ハンバーガーメニュー */
+  .menu-button {
+    font-size: 0;             /* メニューを表示せず、アイコンのみ表示 */
+    margin-right: 0;
+  }
+
+  .menu-button i {
+    font-size: 24px;
+  }
+
+  .header-left-group {
+    margin-right: 10px;
+  }
+
+  /* ロゴを中央に配置（モバイルではstaticで自然配置） */
+  .logo {
+    position: static;         /* 通常配置に戻す */
+    transform: none;          /* 既存の設定を解除 */
+    margin: 0 auto;           /* 左右中央に配置 */
+    font-size: 30px;
+    z-index: 1;
+  }
+
+  .header-right {
+    width: 24px;
+  }
+
+  /* キーワード入力（入力欄・ボタン） */
+  .search-input-field {
+    position: static;         /* 通常配置に戻す */
+    height: auto;
+    opacity: 1;               /* モバイル版では透明化を解除 */
+    visibility: visible;      /* 非表示を解除 */
+    width: 100%;
+    padding: 0 20px 15px;
+  }
+
+  /* 入力欄 */
+  .search-input {
+    width: 100%;
+    max-width: none;
+    padding: 10px;
+  }
+
+  /* JSで使用 */
+  .search-input-field.is-active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* スライドメニュー */
+  .slide-menu {
+    width: 45%;
+    z-index: 10000;
+  }
+
+  /* メイン */
+  main {
+    margin: 0 auto;
+    padding: 30px 15px;
+  }
+
+  /* ページタイトル */
+  .content_title {
+    margin: 20px auto 10px;
+    font-size: 0.9em;
+  }
+
+  /* 本文コンテンツ */
+  .content {
+    width: 90%;
+    margin: 0 auto;
+  }
+
+  .main-message{
+    font-size: 0.9em;
+  }
+
+  /* innerページ */
+  body.inner-page main .content-wrapper {
+    min-height: 200px;
+    width: 90%;
+    padding: 0;
+  }
+
+  /* Chart.js用チャートコンテナ */
+  .chart-container {
+    width: 100%;
+    max-width: 100%;
+    height: 250px;
+    margin: 0 auto;
+  }
+
+  /* ページネーション */
+  .pagination {
+    display: flex;                      /* 横並びに配置 */
+    justify-content: space-around;      /* 左右端に配置 */
+    align-items: center;
+    padding: 15px 0;
+  }
+  
+  /* フッター */
+  .footer {
+    position: static;                   /* 通常配置に戻す */
+    height: auto;
+    padding-top: 50px;
+    padding-bottom: 0;
+  }
+
+  /* フッター内部コンテナ（メニューと連絡先を横並び） */
+  .footer-inner {
+    display: flex;                      /* 縦方向に並べる */
+    flex-direction: column;
+    align-items: center;                /* 左右中央に配置 */
+    width: 100%;
+    gap: 20px;
+  }
+
+  .footer-inner>div {
+    width: 100%;
+    max-width: 200px;
+  }
+
+  .footer-bottom {
+    margin-top: 20px;
+    padding: 30px 0;
+    text-align: center;
+  }
+}

@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block head %}<link rel="stylesheet" href="{% static 'home/css/style.css' %}">{% endblock %}
+
+
+{% block title %}ホーム{% endblock %}
+
+
+{% block content %}
+<div class="home-container">
+        <div class="home-grid1">
+                <h3>株価表示サイトへようこそ</h3>
+                <p>このサイトでは、チャートの表示・シミュレーションができます。</p>
+        </div>
+        <div class="home-grid2-1">
+                選択中の企業：
+                {% for company in companies %}
+                {% if company.symbol == symbol %}
+                {% if company.name_jp %}
+                {{ company.name_jp }}
+                {% else %}
+                <p>{{ company.name_en }}</p>
+                {% endif %}
+                {% endif %}
+                {% endfor %}
+
+                <section class="stocks-chart">
+                        <canvas id="priceChart" data-labels='{{ dates|safe }}' data-prices='{{ prices|safe }}'></canvas>
+                </section>
+        </div>
+        <div class="home-grid2-2">
+                <h4><u>ピックアップ企業</u></h4>
+                {% for company in companies %}
+                <a href="?company={{ company.symbol }}" class="{% if company.symbol == symbol %}active{% endif %}">
+                        {% if company.name_jp %}
+                        {{ company.name_jp }}
+                        {% else %}
+                        {{ company.name_en }}
+                        {% endif %}
+                </a>
+                {% endfor %}
+                <u><a href="{% url 'stocks:company_list' %}">銘柄一覧</a>へ</u>
+        </div>
+</div>
+{% endblock %}

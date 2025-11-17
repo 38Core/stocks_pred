@@ -22,7 +22,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('stocks/', include('stocks.urls')),
     path('predictions/', include('predictions.urls')),
-    path('simulations/', include('simulations.urls')),
-    path('portfolio/', include('portfolio.urls')),
+    path('simulation/', include('simulation.urls')),
+    path('customize/', include('customize.urls')),
     path('', include('home.urls')),
 ]

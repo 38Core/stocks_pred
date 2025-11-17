@@ -1,11 +1,9 @@
-from django.urls import path
-from . import views
-
-#アプリフォルダ名{ %'アプリ名':パスのニックネーム % }
 from django.urls import path,include
+from . import views
 
 app_name = 'home' 
 
 urlpatterns = [
-    path('',views.index,name='index'),
+    path('', views.index, name='index'),
+    path('contact/', views.contact, name='contact'),
 ]

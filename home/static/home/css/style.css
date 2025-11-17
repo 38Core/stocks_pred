@@ -1,0 +1,110 @@
+/*
+==================================================
+   メイン
+==================================================
+*/
+
+/* homeページ */
+.home-container {
+  margin: 15px auto;
+  display: grid;
+  gap: 20px 30px;
+  width: 1000px;
+  grid-template-columns: 1fr 1fr;   /* 2列構成 */
+  grid-template-rows: auto 1fr;     /* 2行構成 */
+  grid-template-areas:
+    "header header"                 /* 1行目: ヘッダーが横幅全て */
+    "main sidebar";                 /* 2行目: メインとサイドバーが横並び */
+}
+
+.home-container div {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 30px;              /* 角を丸くする */
+}
+
+/* グリッドエリア:ヘッダー */
+.home-grid1 {
+  grid-area: header;
+  display: flex;                    /* 子要素を縦方向の中央に並べる */
+  flex-direction: column;
+  justify-content: center;
+  height: 150px;
+}
+
+/* グリッドエリア:メイン */
+.home-grid2-1 {
+  grid-area: main;
+  width: 700px;
+  height: 500px;
+  display: grid;                    /* 子要素を縦方向の中央に並べる */
+  row-gap: 10px;
+  align-content: center;
+}
+
+.home-grid2-1 h4 {
+  padding: 50px 0;
+}
+
+/* Chart.js用チャートコンテナ */
+.stocks-chart {
+  width: 80%;
+  height: 350px;
+  margin: 20px auto;
+}
+
+/* グリッドエリア:サイドバー */
+.home-grid2-2 {
+  grid-area: sidebar;
+  display: grid;                    /* 子要素を縦方向の中央に並べる */
+  row-gap: 30px;
+  padding: 20px 0;
+  align-content: center;
+}
+
+/*
+==================================================
+   レスポンシブデザイン
+==================================================
+*/
+@media (max-width: 768px) {
+
+  /* homeページ */
+  .home-container {
+    width: 500px;
+    margin: 10px auto;
+    grid-template-columns: 1fr;           /* 1列構成 */
+    grid-template-rows: auto auto auto;   /* 3行構成 */
+    grid-template-areas:                  /* 上から順に、ヘッダー・サイドバー・メイン */
+      "header"
+      "sidebar"
+      "main";
+    gap: 20px;
+  }
+
+  /* グリッドエリア:メイン */
+  .home-grid2-1 {
+    width: 500px;
+    height: auto;
+    padding: 20px 0;
+  }
+
+  /* グリッドエリア:サイドバー */
+  .home-grid2-2 {
+    width: 100%;
+    height: auto;
+    padding: 20px 0;
+    row-gap: 10px;
+  }
+
+  /* グリッドエリア:ヘッダー */
+  .home-grid1 {
+    height: auto;
+    padding: 20px;
+  }
+
+  /* Chart.js用チャートコンテナ */
+  .stocks-chart {
+    height: 300px;
+    width: 500px;
+  }
+}

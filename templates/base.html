@@ -1,0 +1,117 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block head %}{% endblock %}
+</head>
+
+<body class="{{ body_class|default:'inner-page' }}">
+    <div class="bg-image"></div>
+    <header class="header">
+        <div class="header-container">
+            <div class="header-left-group">
+                <div class="menu-button">
+                    <i class="fa-solid fa-bars header-icon"></i>メニュー
+                </div>
+                <div class="pc-menu-search">
+                    <i class="fa-solid fa-search header-icon"></i>
+                    <span class="search-label">検索</span>
+                </div>
+            </div>
+            <h1 class="logo"><a href="{% url 'home:index' %}">Stock Stream</a></h1>
+            <div class="header-right">
+                {% if user.is_authenticated %}
+                    ようこそ、<a href="{% url 'accounts:mypage' %}">{{ user.username }}</a> さん
+                {% else %}
+                    <a href="{% url 'accounts:login' %}"><i class="fa-regular fa-circle-user header-icon"></i>ログイン</a>
+                {% endif %}
+            </div>
+        </div>
+        <form class="search-input-field" action="{% url 'stocks:search_company' %}" method="get">
+            <input type="text" name="company_name" placeholder="キーワードで検索" class="search-input" />
+            <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
+    </header>
+    <div class="slide-menu">
+        <div class="slide-menu-user">
+            {% if user.is_authenticated %}
+                ようこそ、<a href="{% url 'accounts:mypage' %}">{{ user.username }}</a> さん
+            {% endif %}
+        </div>
+        <ul class="menu-list">
+            <li>
+                <h3>メニュー</h3>
+            </li>
+           
+            <li><a href="{% url 'stocks:company_list' %}">銘柄一覧</a></li>
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'accounts:mypage' %}">マイページ</a></li>
+                {% if user.is_staff %}
+                    <li><a href="{% url 'master:master_page' %}">管理者ページ</a></li>
+                {% endif %} 
+                <li><a href="{% url 'accounts:logout' %}">ログアウト</a></li>
+            {% else %}
+                <li><a href="{% url 'accounts:login' %}">ログイン</a></li>
+                <li><a href="{% url 'accounts:create' %}">アカウント作成</a></li>
+            {% endif %}
+        </ul>
+    </div>
+    
+    <main id="container">
+        <div class="content-wrapper">
+            <div class="content_title">
+                {% block content_title %}{% endblock %}
+            </div>
+            <div class="content">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-inner">
+            <div>
+                <h4>Menu</h4>
+                <ul>
+                    <li><a href="{% url 'stocks:company_list' %}">銘柄一覧</a></li>
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'accounts:mypage' %}">マイページ</a></li>
+                        {% if user.is_staff %}
+                            <li><a href="{% url 'master:master_page' %}">管理者ページ</a></li>
+                        {% endif %} 
+                        <li><a href="{% url 'accounts:logout' %}">ログアウト</a></li>
+                    {% else %}
+                        <li><a href="{% url 'accounts:login' %}">ログイン</a></li>
+                        <li><a href="{% url 'accounts:create' %}">アカウント作成</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+
+            <div>
+                <h4>Contact</h4>
+                <ul>
+                    <li>Creator: Daiki</li>
+                    <li><a href="{% url 'home:contact' %}">お問い合わせ</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 Daiki Miyazato. All rights reserved.</p>
+        </div>
+    </footer>
+
+
+
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'js/script.js' %}"></script>
+{% block scripts %}{% endblock %}
+</html>
