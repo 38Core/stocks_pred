@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}お気に入り会社一覧{% endblock %}
+{% block content_title %}<h3>お気に入りの会社一覧</h3>{% endblock %}
+
+
+{% block content %}
+    <table>
+        <thead>
+            <tr>
+                <th>会社名（日本語）</th>
+                <th>会社名（英語）</th>
+                <th>所在国</th>
+                <th>お気に入り</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for company in companies %}
+            <tr>
+                <!-- チャートへのリンク -->
+                <td><a href="{% url 'stocks:stock_chart' company.symbol %}">{{ company.name_jp|default:"" }}</a></td>
+                <td><a href="{% url 'stocks:stock_chart' company.symbol %}">{{ company.name_en }}</a></td>
+                <td>{{ company.market.country.name }}</td>
+
+                <!-- お気に入り切替 -->
+                <td>
+                    <a href="{% url 'customize:favorite' company.symbol %}">
+                        {% if company.is_favorite %}
+                            ❤️
+                        {% else %}
+                            🤍
+                        {% endif %}
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4">お気に入り企業はありません</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="page_link ">
+        <small>
+            <a href="{% url 'accounts:mypage' %}">マイページに戻る</a>
+            <a href="{% url 'home:index' %}">ホーム画面に戻る</a>
+        </small>
+    </div>
+{% endblock %}
