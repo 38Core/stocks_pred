@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block head %}<link rel="stylesheet" href="{% static 'stocks/css/style.css' %}">{% endblock %}
+
+
+{% block title %}銘柄一覧{% endblock %}
+{% block content_title %}<h3>銘柄一覧</h3>{% endblock %}
+
+
+{% block content %}
+    {% if keyword %}
+        <p class="main-message"><u>検索ワード: <mark>{{ keyword }}</mark></u></p>
+    {% endif %}
+
+    <table>
+        <colgroup>
+            <col class="col-symbol">
+            <col class="col-en">
+            <col class="col-jp">
+            <col class="col-fav">
+        </colgroup>
+        <thead>
+            <tr>  
+                <th>会社名（日本語）</th>
+                <th>会社名（英語）</th>
+                <th>所在国</th>
+                <th>お気に入り</th> 
+            </tr>
+        </thead>
+        <tbody>
+            {% for company in companies %}
+            <tr>
+                <td><a href="{% url 'stocks:stock_chart' company.symbol %}">{{ company.name_jp|default:"" }}</a></td>
+                <td><a href="{% url 'stocks:stock_chart' company.symbol %}">{{ company.name_en }}</a></td>
+                <td>{{ company.market.country.name }}</td>
+                <td class="icon">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'customize:favorite' company.symbol %}">
+                        {% if company.is_favorite %}
+                            ❤️
+                        {% else %}
+                            🤍
+                        {% endif %}
+                    </a>
+                {% else %}
+                    -
+                {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- ページネーション -->
+    <div class="pagination">
+
+        <!-- 前のページが存在するか -->
+        {% if page_obj.has_previous %}
+            <!-- 前のページへのリンク（keywordがあれば検索条件も維持してURLに含める） -->    
+            <a href="?{% if keyword %}company_name={{ keyword }}&{% endif %}page={{ page_obj.previous_page_number }}">前へ</a>
+        {% endif %}
+
+        <!-- 現在のページ番号と全ページ数を表示（例: Page 2 ~ 5） -->
+        <span>ページ {{ page_obj.number }} ~ {{ page_obj.paginator.num_pages }}</span>
+
+        <!-- 次のページが存在するか -->
+        {% if page_obj.has_next %}
+            <!-- 次のページへのリンク（keywordがあれば検索条件も維持してURLに含める） -->
+            <a href="?{% if keyword %}company_name={{ keyword }}&{% endif %}page={{ page_obj.next_page_number }}">次へ</a>
+        {% endif %}
+    </div>
+    <div class="page_link ">
+        <small>
+            <a href="{% url 'home:index' %}">ホーム画面に戻る</a>
+        </small>
+    </div>
+{% endblock %}

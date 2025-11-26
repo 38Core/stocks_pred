@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ company_name }} エラー{% endblock %}
+
+
+
+{% block content_title %}
+    <h3>⚠{{ company_name }} は株価の情報が登録されていません</h3>
+    <br>
+    <div class="page_link ">
+        <small>
+            <a href="{% url 'home:index' %}">ホーム画面に戻る</a>
+        </small>
+    </div>
+{% endblock %}

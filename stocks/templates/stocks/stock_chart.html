@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}チャート表示{% endblock %}
+{% block content_title %}
+    <h3>
+    {% if company.name_jp %}
+        {{ company.name_jp }} （株価チャート）
+    {% else %}
+        {{ company.name_en }} （株価チャート）
+    {% endif %}
+    </h3>
+{% endblock %}
+
+
+{% block content %}
+    <div class="chart-container">
+        <canvas
+            id="priceChart"
+            data-labels='{{ labels|safe }}'
+            data-prices='{{ prices|safe }}'>
+        </canvas>
+    </div>
+    
+    <div class="page_link ">
+        <small>
+            <a href="javascript:history.back()">前のページに戻る</a>
+            <a href="{% url 'home:index' %}">ホーム画面に戻る</a>
+        </small>
+    </div>
+{% endblock %}

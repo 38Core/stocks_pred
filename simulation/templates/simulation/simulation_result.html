@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}入力画面{% endblock %}
+{% block content_title %}<h3>シュミレーション結果</h3>{% endblock %}
+
+
+{% block content %}
+    {% if error %}
+        <div class="alert alert-warning">
+            {{ error }}
+        </div>
+
+        <div class="page_link">
+            <small>
+                <a href="{% url 'simulation:simulation_form' %}">入力画面に戻る</a>
+                <a href="{% url 'home:index' %}">ホーム画面に戻る</a>
+            </small>
+        </div>
+
+    {% else %}
+        <div>
+            <h4>選択中の会社：
+                {% if company.name_jp %}
+                    {{ company.name_jp }} 
+                {% else %}
+                    {{ company.name_en }} 
+                {% endif %}
+            </h4>
+            <p>投資元本：{{ total_invested }}</p>
+            <p>最終評価額：{{ final_value }}</p>
+            <p>利益：{{ profit }}</p>
+            <p>受取配当（現金）：{{ cash_dividend }}</p>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="simChart"
+                    data-labels='{{ labels|safe }}'
+                    data-prices='{{ prices|safe }}'
+                    data-invested='{{ invested|safe }}'
+                    data-valuation='{{ valuation|safe }}'>
+            </canvas>
+        </div>
+
+        <br>
+        <div class="page_link ">
+            <small>
+                <a href="{% url 'accounts:mypage' %}">マイページに戻る</a>
+                <a href="{% url 'home:index' %}">ホーム画面に戻る</a>
+            </small>
+        </div>
+    {% endif %}
+{% endblock %}
