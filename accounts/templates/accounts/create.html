@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}アカウント作成{% endblock %}
+{% block content_title %}<h3>アカウント作成</h3>{% endblock %}
+
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    
+    <p>
+        <label for="{{ form.username.id_for_label }}">ユーザー名:</label>
+        {{ form.username }}
+        {% if form.username.errors %}
+            <br><span style="color:red">{{ form.username.errors }}</span>
+        {% endif %}
+        <ul class="form-notes">
+          <li>この項目は必須です。</li>
+        </ul>
+    </p>
+
+    <p>
+        <label for="{{ form.password1.id_for_label }}">パスワード:</label>
+        {{ form.password1 }}
+        {% if form.password1.errors %}
+            <br><span style="color:red">{{ form.password1.errors }}</span>
+        {% endif %}
+        <ul class="form-notes">
+          <li>この項目は必須です。</li>
+          <li>数字だけのパスワードは使用できません</li>
+        </ul>
+    </p>
+
+    <p>
+        <label for="{{ form.password2.id_for_label }}">パスワード(確認用):</label>
+        {{ form.password2 }}
+        {% if form.password2.errors %}
+            <br><span style="color:red">{{ form.password2.errors }}</span>
+        {% endif %}
+        <ul class="form-notes">
+          <li>確認のため、もう一度パスワードを入力してください</li>
+        </ul>
+    </p>
+
+    <button type="submit">登録する</button>
+</form>
+
+{% if messages %}
+    <ul>
+    {% for message in messages %}
+        <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+{% endif %}
+
+{% endblock %}

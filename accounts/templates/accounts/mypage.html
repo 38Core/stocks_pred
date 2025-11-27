@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}マイページ{% endblock %}
+{% block content_title %}<h3>マイページ</h3>{% endblock %}
+
+
+{% block content %}
+    <ul class="menu-link">
+        <li><i class="fa-solid fa-thumbtack" style="margin-left:40px;"></i><a href="{% url 'customize:favorite_companies' %}">お気に入り</a></li>
+        <li><i class="fa-solid fa-thumbtack" style="margin-left:40px;"></i><a href= "{% url 'simulation:simulation_form' %}">シュミレーション</a></li>
+        <li><i class="fa-solid fa-thumbtack" style="margin-left:40px;"></i><a href="{% url 'accounts:logout' %}">ログアウト</a></li>
+    </ul>
+    <br>
+    <div class="page_link ">
+    <small>
+        <a href="{% url 'home:index' %}">ホーム画面に戻る</a>
+    </small>
+    </div>
+{% endblock %}
+
