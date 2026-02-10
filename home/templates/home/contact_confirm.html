@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}内容の確認{% endblock %}
+{% block content_title %}<h3>お問い合わせ内容の確認</h3>{% endblock %}
+
+
+{% block content %}
+    <p>以下の内容で間違いがないかご確認ください</p>
+    <br>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div>
+            <label for="{{ form.name.id_for_label }}">お名前</label>
+            {{ form.name }}
+        </div>
+
+        <div>
+            <label for="{{ form.email.id_for_label }}">メールアドレス</label>
+            {{ form.email }}
+        </div>
+
+        <div>
+            <label for="{{ form.subject.id_for_label }}">件名</label>
+            {{ form.subject }}
+        </div>
+
+        <div>
+            <label for="{{ form.message.id_for_label }}">お問い合わせ内容</label>
+            {{ form.message }}
+        </div>
+        <button type="submit" name="go_send">この内容で送信する</button>
+      
+    </form>
+
+    <br>
+    <div class="page_link ">
+        <small>
+            <a href="javascript:history.back()">前のページに戻る</a>
+            <a href="{% url 'home:index' %}">ホーム画面に戻る</a>
+        </small>
+    </div>
+{% endblock %}

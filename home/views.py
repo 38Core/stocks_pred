@@ -1,5 +1,6 @@
 from django.shortcuts import render  
 from stocks.models import StockPrice, Company  
+from common.text_utils import errnote_check
 from django.core.mail import send_mail
 from django.conf import settings
 from .forms import ContactForm
@@ -43,7 +44,7 @@ def index(request):
         "body_class": "home",           # bodyタグに付与するCSSクラス名
     }
 
-    return render(request, "home/index.html", context)
+    return render(request, 'home/index.html', context)
 
 # お問い合わせフォーム
 def contact(request):
@@ -72,7 +73,16 @@ def contact(request):
                     # フォームの枠線を消す
                     field.widget.attrs['style'] = ' border: none;'
                 
-                return render(request, 'home/contact_confirm.html', {'form': confirm_form})
+                return render(request, 'home/contact_confirm.html', {
+                    'form': confirm_form
+                })
+            
+            # エラーの重複を外す
+            unique_errors=errnote_check(form)
+            return render(request, 'home/contact_form.html', {
+                'unique_errors': unique_errors,
+                'form': form
+            })
         
         # 押されたボタンが「送信する」ボタンの場合
         elif 'go_send' in request.POST:
@@ -139,7 +149,9 @@ def contact(request):
                     
                     # 送信完了後、セッションから問い合わせデータを削除
                     request.session.pop('contact_data', None)
-                    return render(request, 'home/contact_complete.html', {'name': data['name']})
+                    return render(request, 'home/contact_complete.html', {
+                        'name': data['name']
+                    })
                 
                 # メール送信でエラーが発生した場合の処理
                 except Exception as e:
@@ -150,9 +162,14 @@ def contact(request):
                     # エラーメッセージを定義
                     error_message = "メール送信に失敗しました。もう一度お試しください。"
 
-                    return render(request, 'home/contact_form.html', {'form': form, 'error_message': error_message})
+                    return render(request, 'home/contact_form.html', {
+                        'form': form,
+                        'error_message': error_message
+                    })
     
     # 初回アクセス時は空のフォームを作成
     else:
         form = ContactForm()
-        return render(request, 'home/contact_form.html', {'form': form})
+        return render(request, 'home/contact_form.html', {
+            'form': form
+        })

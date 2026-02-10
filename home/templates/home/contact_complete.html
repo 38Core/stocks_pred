@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}お問い合わせ{% endblock %}
+{% block content_title %}<h3>送信完了</h3>{% endblock %}
+
+
+{% block content %}
+    <div>お問い合わせありがとうございました。内容を確認次第、ご連絡いたします。</div>
+    <div class="page_link ">
+        <small>
+            <a href="{% url 'home:index' %}">ホーム画面に戻る</a>
+        </small>
+    </div>
+{% endblock %}

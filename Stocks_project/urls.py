@@ -24,5 +24,6 @@ urlpatterns = [
     path('predictions/', include('predictions.urls')),
     path('simulation/', include('simulation.urls')),
     path('customize/', include('customize.urls')),
+    path('master/', include('master.urls')),
     path('', include('home.urls')),
 ]
