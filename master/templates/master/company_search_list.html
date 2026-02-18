@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block head %}<link rel="stylesheet" href="{% static 'master/css/style.css' %}">{% endblock %}
+{% block scripts %}<script src="{% static 'master/js/script.js' %}"></script>{% endblock %}
+
+{% block title %}会社の一覧{% endblock %}
+{% block content_title %}<h3>会社の一覧</h3>{% endblock %}
+
+
+{% block content %}
+    <p class="inner-title">どれか一つを入力してください</p>
+    <br>
+ 
+    <form method="get" class="search-form">
+        {{ form.name }}
+        {{ form.industry }}
+        {{ form.market }}
+        <button type="submit">検索</button>
+    </form>
+
+        {% if form.name.errors %}
+            <ul class="err-notes">
+                {% for error in form.name.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% if form.industry.errors %}
+            <ul class="err-notes">
+                {% for error in form.industry.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% if form.market.errors %}
+            <ul class="err-notes">
+                {% for error in form.market.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        
+        
+
+    {% if companies %}
+        <table>
+        <thead>
+            <tr>
+                <th>会社名（日本語）</th>
+                <th>会社名（英語）</th>
+                <th>業界</th>
+                <th>市場</th>
+                <th>メニュー</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for company in companies %}
+            <tr>
+                <td>{{ company.name_jp|default:"" }}</td>
+                <td>{{ company.name_en }}</td>
+                <td>{{ company.industry.name_jp }}</td>
+                <td>{{ company.market.name }}</td>
+                <td class="menu-icon">
+                    <a href="javascript:void(0);">
+                        <i class="fa-solid fa-ellipsis-vertical mag-icon"></i>
+                    </a>
+                    <!-- <div class="company-menu"> -->
+                        <ul class="menu-list">              
+                            <li><a href="{% url 'master:company_read' company.symbol %}">詳細</a></li>
+                            <li><a href="{% url 'master:company_update' company.symbol %}">変更</a></li>
+                            <li><a href="{% url 'master:company_delete' company.symbol %}">一覧から外す</a></li>
+                        </ul>
+                    <!-- </div> -->
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="6">該当する会社はありません</td></tr>
+            {% endfor %}
+        </tbody>
+        </table>
+        <!-- ページネーション -->
+        <div class="pagination">
+
+            <!-- 前のページが存在するか -->
+            {% if page_obj.has_previous %}
+                <a href="?name={{ request.GET.name }}&industry={{ request.GET.industry }}&market={{ request.GET.market }}&page={{ page_obj.previous_page_number }}">前へ</a>
+            {% endif %}
+
+            <!-- 現在のページ番号と全ページ数を表示（例: Page 2 ~ 5） -->
+            <span>ページ {{ page_obj.number }} ~ {{ page_obj.paginator.num_pages }}</span>
+
+            <!-- 次のページが存在するか -->
+            {% if page_obj.has_next %}
+                <a href="?name={{ request.GET.name }}&industry={{ request.GET.industry }}&market={{ request.GET.market }}&page={{ page_obj.next_page_number }}">次へ</a>
+            {% endif %}
+        </div>
+        <br>
+        
+    {% endif %}  
+    <div class="page_link ">
+        <small>
+            <a href="{% url 'master:master_page' %}">管理者ページに戻る</a>
+        </small>
+    </div> 
+{% endblock %}

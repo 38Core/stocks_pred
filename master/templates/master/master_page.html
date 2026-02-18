@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block head %}<link rel="stylesheet" href="{% static 'master/css/style.css' %}">{% endblock %}
+
+
+{% block title %}管理者ページ{% endblock %}
+{% block content_title %}<h3>管理者ページ</h3>{% endblock %}
+
+
+{% block content %}
+    <ul class="menu-link">
+        <li><i class="fa-solid fa-thumbtack" style="margin-left:15px;"></i><a href="{% url 'master:company_create' %}">会社を登録する</a></li>
+        <li><i class="fa-solid fa-thumbtack" style="margin-left:15px;"></i><a href="{% url 'master:company_search_list' %}">会社の一覧</a></li>
+        <li><i class="fa-solid fa-thumbtack" style="margin-left:15px;"></i><a href="{% url 'accounts:logout' %}">ログアウト</a></li>
+    </ul>
+    
+    <div class="page_link ">
+        <small>
+            <a href="{% url 'home:index' %}">ホーム画面に戻る</a>
+        </small>
+    </div>
+{% endblock %}

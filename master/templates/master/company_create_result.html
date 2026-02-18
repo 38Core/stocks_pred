@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block head %}<link rel="stylesheet" href="{% static 'master/css/style.css' %}">{% endblock %}
+
+
+{% block title %}登録内容{% endblock %}
+{% block content_title %}<h3><u>下記の内容で登録されました！！！</u></h3>{% endblock %}
+
+
+{% block content %}
+    <form>
+        <div>
+            <label for="{{ form.name_en.id_for_label }}">会社名（英語）</label>
+            {{ form.name_en }}
+        </div>
+
+        <div>
+            <label for="{{ form.name_jp.id_for_label }}">会社名（日本語）</label>
+            {{ form.name_jp }}
+        </div>
+
+        <div>
+            <label for="{{ form.industry.id_for_label }}">業界</label>
+            {{ form.industry }}
+        </div>
+
+        <div>
+            <label for="{{ form.market.id_for_label }}">市場</label>
+            {{ form.market }}
+        </div>
+
+        <div>
+            <label for="{{ form.memo.id_for_label }}">備考欄</label>
+            {{ form.memo }}
+        </div>
+    </form>
+    <div class="page_link">
+        <small>
+            <a href="{% url 'master:company_create' %}">登録画面に戻る</a>
+            <a href="{% url 'master:master_page' %}">管理者ページに戻る</a>
+        </small>
+    </div>
+
+{% endblock %}

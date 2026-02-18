@@ -1,0 +1,330 @@
+/*
+==================================================
+   メイン
+==================================================
+*/
+
+/* innerページ */
+body.inner-page main .content-wrapper {
+    background-color: #202124;
+    color: #fff;
+}
+
+main a {
+    color: #fff;
+}
+
+main a:hover {
+    color: #cccccc;
+    font-size: 1.02em;
+}
+
+/* インナータイトル */
+.inner-title {
+    width: 95%;
+    margin: 0 auto;         /* 左右中央に配置 */
+    padding-left: 20px;
+}
+
+/* エラーメッセージ */
+.err-notes {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;         /* 左右中央に配置 */
+    text-align: center;
+}
+
+.err-notes li {
+    color: #ff6b6b;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+
+/*
+==================================================
+   フォーム
+==================================================
+*/
+
+/* フォーム */
+main form {
+    align-items: center;
+    width: 100%;
+}
+
+/* 入力欄とセレクトボックス */
+main form input,
+main form textarea,
+main form select {
+    width: 100%;
+    height: 40px;
+    padding: 10px 15px;
+    background-color: #3a3a3a;
+    border: 1px solid #f5f5f5;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 15px;
+    box-sizing: border-box;         /* 幅計算を簡略化 */
+}
+
+/* ビューコードで追加するクラス */
+main form input.is-readonly,
+main form textarea.is-readonly,
+main form select.is-readonly {
+    border: 2px solid #3a3a3a;
+}
+
+main form input:focus,
+main form textarea:focus,
+main form select:focus {
+    outline: none;                  /* フォーカス時のデフォルト枠線を消す */
+    border: 2px solid #9CCFFF;
+    background-color: #3a3a3a;
+}
+
+/* フォームボタン */
+main form button {
+    margin-bottom: 20px;
+    font-size: 15px;
+    font-weight: bold;
+    white-space: nowrap;
+    background-color: #555;
+    border: 1px solid #ccc;
+    color: #fff;
+}
+
+main form button:hover {
+    background-color: #f0f0f0;
+    color: #000;
+    border: 1px solid #555;
+}
+
+/* 「サーチ」フォーム */
+.search-form {
+    display: flex;              /* 横方向に配置 */
+    flex-direction: row;
+    gap: 15px;
+    margin: 0 auto 50px;
+    padding: 20px 0;
+    justify-content: center;    /* 子要素を左右中央に配置 */
+    width: 90%;
+}
+
+/* 「サーチ」フォームのデフォルトテキスト */
+.search-form input::placeholder {
+    color: #f5f5f5;
+    font-size: 15px;
+}
+
+/* 「サーチ」フォームの検索ボタン */
+.search-form button {
+    border-radius: 6px;
+    height: 45px;
+    padding: 10px 35px;
+    margin: auto 0;
+    background-color: #007bff;
+    border: 2px solid #007bff;
+    color: #fff;      
+}
+
+.search-form button:hover {
+    border: 1.1px solid #007bff;
+    background-color: #BDE8F5;
+    color: #000;   
+}
+
+
+/*
+==================================================
+   テーブル
+==================================================
+*/
+
+/* テーブル */
+main table {
+    width: 95%;
+    margin: 0 auto;             /* 左右中央に配置 */
+    font-size: 0.9em;
+    color: #eee;
+}
+
+/* ヘッダー行 */
+main th {
+    padding: 12px;
+    color: #aaa;
+}
+
+/* セル */
+main td {
+    padding: 15px 12px;
+    background-color: #363A40;
+    border-bottom: 1.5px solid #5b5e66;
+}
+
+main tbody tr:hover td {
+    background-color: #2d2d2d;
+}
+
+
+/*
+==================================================
+   カンパニーメニュー
+==================================================
+*/
+
+/* 縦3点アイコン */
+main .menu-icon {
+    position: relative;             /* 基準点にする */
+}
+
+/* カンパニーメニュー */
+main .menu-list {
+    position: absolute;             /* 通常の配置から外す */
+    top: 0;
+    left: 0;
+    z-index: 1000;
+
+    list-style: none;
+    width: 150px;
+    padding: 0;
+    margin: 0;
+    display: none;                  /* 通常時は非表示 */ 
+    border: 1px solid #ccc;
+    background-color: #202124;
+}
+
+/* JSで使用 */
+main .menu-list.is-open {
+    display: block;                 /* アイコンをクリックしたときに表示 */ 
+}
+
+main .menu-list li {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+main .menu-list li a {
+    display: block;                     /* クリック範囲を広げる */
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    border-bottom: 0.1px solid #ccc;
+    color: #fff;
+    width: 100%;
+    box-sizing: border-box;             /* 幅計算を簡略化 */
+}
+
+main .menu-list li a:hover {
+    background-color: #9CCFFF;
+    color: #333;
+    font-size: 1em;
+}
+
+/*
+==================================================
+   レスポンシブデザイン
+==================================================
+*/
+@media (max-width: 768px) {
+    
+    /* 「サーチ」フォーム */
+    .search-form {
+        flex-direction: column;         /* 子要素を縦方向に並べる */ 
+        gap: 15px;
+        width: 95%;
+    }
+
+    /* 「サーチ」フォームのボタン */
+    .search-form button {
+        padding: 10px 0;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    /* テーブルレイアウトをカード型に強制変換 */
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;             /* テーブル構造を解除 */
+        width: 100%;
+    }
+
+    /* ヘッダー行 */
+    thead {
+        display: none;              /* モバイル版では表示しない */
+    }
+
+    /* 行要素（1行ごとに1つのカードにする） */
+    tr {
+        background: #363A40;
+        margin-bottom: 15px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        position: relative;        /* メニューマークの基準点 */
+    }
+
+    /* セル */
+    td {
+        border: none !important;
+        padding: 4px 0 !important;
+        text-align: left;
+    }
+
+    /* 縦3点アイコン */
+    main .menu-icon {
+        position: static;        /* relativeを打ち消す（フル画面で設定） */
+    }
+
+    /* 1番目のセル：会社名（日本語） */
+    td:nth-of-type(1) {
+        font-size: 1.1rem;
+        color: #fff;
+        padding-right: 40px !important;        /* メニューアイコンとの距離を確保 */
+    }
+
+    /* 2番目のセル：会社名（英語） */
+    td:nth-of-type(2) {
+        font-size: 0.9rem;
+    }
+
+    /* 3番目のセル：業界 */
+    td:nth-of-type(3) {
+        font-size: 0.85rem;
+        color: #fff;
+        margin-top: 5px;
+    }
+
+    /* 4番目のセル：市場 */
+    td:nth-of-type(4) {
+        font-size: 0.85rem;
+        margin-top: 5px;
+        color: #fff;
+    }
+
+    /* アイコン */
+    td .mag-icon {
+        position: absolute;             /* 通常のテーブル配置から外す */
+        top: 15px;                      /* 上・右を指定して、アイコンを右上に表示 */
+        right: 15px;
+        width: auto;
+        font-size: 1.4rem;
+    }
+
+    /* カンパニーメニュー */
+    main .menu-list {
+        top: 5px;
+        right: 15px;
+        left: auto;                     /* フル画面の基準を上書き */
+        font-size: 0.8em;
+    }
+
+    main tbody tr:hover td {
+        background-color: #363A40;
+    }
+}
