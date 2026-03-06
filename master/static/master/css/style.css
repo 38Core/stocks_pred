@@ -49,8 +49,9 @@ main a:hover {
 
 /* フォーム */
 main form {
-    align-items: center;
+    margin: 0 auto;
     width: 100%;
+    max-width: 400px;
 }
 
 /* 入力欄とセレクトボックス */
@@ -105,10 +106,11 @@ main form button:hover {
     display: flex;              /* 横方向に配置 */
     flex-direction: row;
     gap: 15px;
-    margin: 0 auto 50px;
+    margin: 0 auto 20px;
     padding: 20px 0;
     justify-content: center;    /* 子要素を左右中央に配置 */
     width: 90%;
+    max-width: 900px;
 }
 
 /* 「サーチ」フォームのデフォルトテキスト */
@@ -143,7 +145,8 @@ main form button:hover {
 
 /* テーブル */
 main table {
-    width: 95%;
+    width: 100%;
+    max-width: 95%;
     margin: 0 auto;             /* 左右中央に配置 */
     font-size: 0.9em;
     color: #eee;

@@ -115,6 +115,14 @@ function getData(el, key) {
   return JSON.parse(el.dataset[key]);
 }
 
+// チャート幅に応じてフォントサイズを返す関数
+function responsiveFont(context) {
+  // 現在描画されているチャートの横幅を取得
+  const w = context.chart.width;
+  // フォントサイズを設定（400px:9px、400~700px:11px、700px:13px）
+  const size = w < 400 ? 9 : w < 700 ? 11 : 13;
+  return { size };
+}
 
 
 
@@ -133,8 +141,14 @@ if (priceEl) {
   const labels = getData(priceEl, "labels");   // [日付:"2001-01-01", ...]
   const prices = getData(priceEl, "prices");   // [株価:100.5, 102.3, ...]
 
+  priceEl.style.position = "absolute";
+  priceEl.style.top = "0";
+  priceEl.style.left = "0";
+  priceEl.style.width = "100%";
+  priceEl.style.height = "100%";
+
   // Chart.jsでグラフを生成
-  new Chart(priceEl, {
+  const priceChart = new Chart(priceEl, {
     type: "line",                     // 折れ線グラフ
 
     // チャートデータの設定
@@ -143,7 +157,7 @@ if (priceEl) {
       datasets: [{
         label: "株価",                // データセットの名前
         data: prices,                 // Y軸のデータ（株価）
-        borderColor: "#3b82f6",     // 線の色（青）
+        borderColor: "#3b82f6",       // 線の色（青）
         borderWidth: 2,               // 線の太さ
         tension: 0.3,                 // 曲線の滑らかさ
         pointRadius: 0                // データポイントを非表示
@@ -173,7 +187,7 @@ if (priceEl) {
       plugins: {
         // 凡例の設定
         legend: {
-          position: "top",            // 上部に配置
+          position: "bottom",         // 下部に配置
           labels: {
             usePointStyle: true       // ポイントスタイルを使用
           }
@@ -196,18 +210,23 @@ if (priceEl) {
             autoSkip: false,                                  // 自動間引きを無効化
             maxRotation: 0,                                   // ラベルを回転させない
             minRotation: 0,                                   // ラベルを回転させない
+            font: responsiveFont,                             // チャート幅に応じてフォントサイズを自動調整
 
             // ラベルを5年ごとに年号のみを表示し、同じ年の重複を防ぐ
             callback: function(value, index, values) {
               const label = this.getLabelForValue(value);     // ラベル文字列を取得
               const year = parseInt(label.slice(0, 4), 10);   // 年を抽出（最初の4文字）
 
-              // 5の倍数でなければ表示しない
-              if (year % 5 !== 0) {
+              // チャート幅に応じて間隔を変える
+              const w = this.chart.width;
+              const interval = w < 400 ? 20 : w < 700 ? 10 : 5;  // 400px未満:20年、~700px:10年、700px以上:5年
+
+              // 間隔の倍数でなければ表示しない
+              if (year % interval !== 0) {
                 return "";
               }
 
-              // 同じ年が連続する場合は表示しない（文字の重なり防止）
+              // 同じ年が連続する場合は表示しない
               if (index > 0) {
                 const prevLabel = this.getLabelForValue(values[index - 1].value);
                 const prevYear = parseInt(prevLabel.slice(0, 4), 10);
@@ -240,8 +259,8 @@ if (priceEl) {
           position: "left",                       // 左側に配置
           title: { display: false },              // 軸タイトルは非表示
           ticks: {
-            // 値を整数で表示
-            callback: v => v.toFixed(0)
+            callback: v => v.toFixed(0),          // 値を整数で表示
+            font: responsiveFont                  // チャート幅に応じてフォントサイズを自動調整
           }
         }
       }
@@ -252,23 +271,31 @@ if (priceEl) {
 
 
 
-
 // 積立シミュレーションを表示するチャート
 
 // -------------------------
 // 変数を定義
-// ------------------------- 
+// -------------------------
 const simEl = document.getElementById("simChart");      // シュミレーションチャート描画スペース
+
+
 
 // シュミレーションチャート描画スペースがあるか
 if (simEl) {
 
-  // Y軸ラベルを描画 
+  // カスタムプラグインの定義
   const yAxisLabelPlugin = {
     id: "yAxisLabelPlugin",
-    afterDraw(chart) {                                  // 描画の後に実行
-      const { ctx, chartArea } = chart;                 // Canvasコンテキストとチャートエリアを取得
 
+    // 描画完了後に実行
+    afterDraw(chart) {
+      // X軸ラベルのレスポンシブ対応
+      const w = chart.width;                            // 現在描画されているチャートの横幅を取得
+      const limit = w < 400 ? 4 : w < 700 ? 6 : 8;      // ラベル数の上限（400px:4ヶ、400~700px:6ヶ、700px:8ヶ）
+      chart.options.scales.x.ticks.maxTicksLimit = limit; 
+
+      // Y軸ラベルの設定
+      const { ctx, chartArea } = chart;                 // Canvasコンテキストとチャートエリアを取得
       ctx.save();                                       // 現在の描画状態を保存
       ctx.fillStyle = "#374151";                      // テキストの色（グレー）
       ctx.font = "12px sans-serif";                     // フォント設定
@@ -302,7 +329,7 @@ if (simEl) {
     data: {
       labels: getData(simEl, "labels"),                 // X軸のラベル（日付）
       datasets: [
-        // データセット：株価
+        // 折れ線1：株価（左Y軸）
         {
           label: "株価",
           data: getData(simEl, "prices"),               // 株価データ
@@ -312,7 +339,8 @@ if (simEl) {
           tension: 0.3,                                 // 曲線の滑らかさ
           pointRadius: 0                                // データポイントを非表示
         },
-        // データセット：積立額
+
+        // 折れ線2：積立額（右Y軸）
         {
           label: "積立額",
           data: getData(simEl, "invested"),             // 積立額データ
@@ -323,7 +351,8 @@ if (simEl) {
           tension: 0,                                   // 直線（曲線なし）
           pointRadius: 0                                // データポイントを非表示
         },
-        // データセット：評価額
+
+        // 折れ線③：評価額（右Y軸・塗りつぶしあり）
         {
           label: "評価額",
           data: getData(simEl, "valuation"),            // 評価額データ
@@ -338,7 +367,7 @@ if (simEl) {
       ]
     },
 
-    // チャートオプションの設定
+    // チャート全体のオプション設定
     options: {
       // レイアウト設定（余白）
       layout: {
@@ -349,7 +378,7 @@ if (simEl) {
         }
       },
       responsive: true,                                 // レスポンシブ対応
-      maintainAspectRatio: false,                       // アスペクト比を固定しない
+      maintainAspectRatio: false,                       // CSSで指定した高さを優先
 
       // マウス操作時の動作設定
       interaction: {
@@ -361,11 +390,12 @@ if (simEl) {
       plugins: {
         // 凡例の設定
         legend: {
-          position: "top",                              // 上部に配置
+          position: "bottom",                           // 下部に配置
           labels: {
             usePointStyle: true                         // ポイントスタイルを使用
           }
         },
+
         // ツールチップ設定
         tooltip: {
           callbacks: {
@@ -391,26 +421,29 @@ if (simEl) {
             autoSkip: true,           // 自動間引きを有効化
             maxTicksLimit: 8,         // 最大8個までラベルを表示
             maxRotation: 0,           // ラベルを回転させない
-            minRotation: 0            // ラベルを回転させない
+            minRotation: 0,           // ラベルを回転させない
+            font: responsiveFont      // チャート幅に応じてフォントサイズを自動調整
           }
         },
+
         // 左Y軸の設定（株価）
         y: {
           position: "left",           // 左側に配置
           title: { display: false },  // プラグインで描画
           ticks: {
-            // 値を整数で表示
-            callback: v => v.toFixed(0)
+            callback: v => v.toFixed(0),  // 値を整数で表示
+            font: responsiveFont          // チャート幅に応じてフォントサイズを自動調整
           }
         },
+
         // 右Y軸の設定（金額）
         y1: {
           position: "right",                // 右側に配置
           grid: { drawOnChartArea: false }, // グリッド線を描画しない（重複防止）
           title: { display: false },        // プラグインで描画
           ticks: {
-            // 値をカンマ区切りで表示
-            callback: v => v.toLocaleString()
+            callback: v => v.toLocaleString(),  // 値をカンマ区切りで表示
+            font: responsiveFont                // チャート幅に応じてフォントサイズを自動調整
           }
         }
       }
@@ -418,3 +451,4 @@ if (simEl) {
     plugins: [yAxisLabelPlugin]             // カスタムプラグインを登録
   });
 }
+

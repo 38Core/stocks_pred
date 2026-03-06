@@ -1,10 +1,13 @@
-from django.shortcuts import render  
-from stocks.models import StockPrice, Company  
+from django.shortcuts import render
+from stocks.models import StockPrice, Company
 from common.text_utils import errnote_check
-from django.core.mail import send_mail
 from django.conf import settings
 from .forms import ContactForm
-import json  
+import json
+import base64
+from email.mime.text import MIMEText
+from google.oauth2.credentials import Credentials
+from googleapiclient.discovery import build
 
 # 表示対象の銘柄リスト
 DISPLAY_SYMBOLS = [
@@ -46,6 +49,36 @@ def index(request):
 
     return render(request, 'home/index.html', context)
 
+
+# メールを送信する
+def send_gmail(to, subject, message):
+
+    # 認証情報を作成
+    creds = Credentials(
+        token=None,
+        refresh_token=settings.GMAIL_REFRESH_TOKEN,
+        token_uri='https://oauth2.googleapis.com/token',
+        client_id=settings.GMAIL_CLIENT_ID,
+        client_secret=settings.GMAIL_CLIENT_SECRET,
+    )
+
+    # Gmail APIクライアントを作成
+    service = build('gmail', 'v1', credentials=creds)
+
+    # メールを作成
+    mime = MIMEText(message, 'plain', 'utf-8')
+    mime['to']      = to
+    mime['from']    = settings.DEFAULT_FROM_EMAIL
+    mime['subject'] = subject
+
+    # base64エンコードして送信
+    raw = base64.urlsafe_b64encode(mime.as_bytes()).decode()
+    service.users().messages().send(
+        userId='me',
+        body={'raw': raw}
+    ).execute()
+
+
 # お問い合わせフォーム
 def contact(request):
     # リクエストがPOSTメソッドかどうかをチェック
@@ -72,18 +105,18 @@ def contact(request):
                     field.widget.attrs['readonly'] = True
                     # フォームの枠線を消す
                     field.widget.attrs['style'] = ' border: none;'
-                
+
                 return render(request, 'home/contact_confirm.html', {
                     'form': confirm_form
                 })
-            
+
             # エラーの重複を外す
-            unique_errors=errnote_check(form)
+            unique_errors = errnote_check(form)
             return render(request, 'home/contact_form.html', {
                 'unique_errors': unique_errors,
                 'form': form
             })
-        
+
         # 押されたボタンが「送信する」ボタンの場合
         elif 'go_send' in request.POST:
 
@@ -95,9 +128,7 @@ def contact(request):
                 # メール送信処理
                 try:
                     # ========== 自分宛メール ==========
-                    # 自分宛の件名
                     subject_to_me = f"【お問い合わせがありました】{data['subject']}"
-                    # 自分宛の本文
                     message_to_me = f"""
 お問い合わせがありました。
 
@@ -108,18 +139,14 @@ def contact(request):
 お問い合わせ内容:
 {data['message']}
 """
-                    # 自分宛に送信
-                    send_mail(
-                        subject=subject_to_me,                          # メールの件名
-                        message=message_to_me,                          # メールの本文
-                        from_email=settings.DEFAULT_FROM_EMAIL,         # 送信元メールアドレス（settings.pyで設定）
-                        recipient_list=[settings.DEFAULT_FROM_EMAIL],   # 受信先メールアドレスのリスト（settings.pyで設定）
+                    send_gmail(
+                        to=settings.DEFAULT_FROM_EMAIL,
+                        subject=subject_to_me,
+                        message=message_to_me,
                     )
 
                     # ========== 相手宛メール ==========
-                    # 相手宛の件名
                     subject_to_user = f"【お問い合わせ受付完了】{data['subject']}"
-                    # 相手宛の本文
                     message_to_user = f"""
 {data['name']} 様
 
@@ -139,20 +166,18 @@ def contact(request):
 
 内容を確認後、改めて私個人のメールアドレスより速やかご連絡させていただきます。
 """
-                    # 相手宛に送信
-                    send_mail(
-                        subject=subject_to_user,                    # メールの件名
-                        message=message_to_user,                    # メールの本文
-                        from_email=settings.DEFAULT_FROM_EMAIL,     # 送信元メールアドレス（settings.pyで設定）
-                        recipient_list=[data['email']],             # 受信先メールアドレスのリスト（入力されたメールアドレス）
+                    send_gmail(
+                        to=data['email'],
+                        subject=subject_to_user,
+                        message=message_to_user,
                     )
-                    
+
                     # 送信完了後、セッションから問い合わせデータを削除
                     request.session.pop('contact_data', None)
                     return render(request, 'home/contact_complete.html', {
                         'name': data['name']
                     })
-                
+
                 # メール送信でエラーが発生した場合の処理
                 except Exception as e:
 
@@ -166,7 +191,13 @@ def contact(request):
                         'form': form,
                         'error_message': error_message
                     })
-    
+
+        # go_confirmもgo_sendもない不正なPOSTは初期画面へ
+        form = ContactForm()
+        return render(request, 'home/contact_form.html', {
+            'form': form
+        })
+
     # 初回アクセス時は空のフォームを作成
     else:
         form = ContactForm()

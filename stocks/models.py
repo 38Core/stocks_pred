@@ -1,13 +1,25 @@
 from django.db import models
+from django.db.models import Q
 
 # 企業情報テーブル
 class Company(models.Model):
     symbol = models.CharField(max_length=17, primary_key=True, editable=False)  # 銘柄コード
-    name_en = models.CharField(max_length=255)                                  # 企業名（英名）
+    name_en = models.CharField(max_length=255, null=True, blank=True)           # 企業名（英名）
     name_jp = models.CharField(max_length=255, null=True, blank=True)           # 企業名（日本語）                         
     industry = models.ForeignKey('Industry', on_delete=models.PROTECT)          # 外部キー（業界情報テーブル）
     market = models.ForeignKey('Market', on_delete=models.PROTECT)              # 外部キー（市場情報テーブル））
     memo = models.TextField(blank=True)                                         # メモ
+
+    # 会社名は英名か日本語どちらかは必ず入れる
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                check=(
+                    Q(name_en__gt='') | Q(name_jp__gt='')
+                ),
+                name='name_en_or_name_jp_required'
+            )
+        ]
 
     # 銘柄コードを採番（業界コード＋数字7桁）
     def save(self, *args, **kwargs):

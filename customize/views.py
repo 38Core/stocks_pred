@@ -21,7 +21,7 @@ def favorite(request, symbol):
         fav.delete()
 
     # 元のページに戻る
-    return redirect(request.META.get("HTTP_REFERER", "stocks:company_list"))
+    return redirect(request.META.get("HTTP_REFERER", 'stocks:company_list'))
 
 # ログインユーザーのお気に入り企業をリスト表示
 @login_required

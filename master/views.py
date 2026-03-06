@@ -28,20 +28,24 @@ def company_create(request):
         # フォームのデータを取得
         form = CompanyForm(request.POST)        
         if form.is_valid():
-            # データベースに登録していない場合
+            # データベースに完全一致するデータの存在を確認
             exists = Company.objects.filter(
                 name_en=form.cleaned_data['name_en'],
-                name_jp=form.cleaned_data['name_jp']
+                name_jp=form.cleaned_data['name_jp'],
+                industry=form.cleaned_data['industry'],
+                market=form.cleaned_data['market']
             ).exists()
+            # 完全一致するものがない場合
             if not exists:
-                company = form.save()   # データーベースに登録
+                company = form.save()               # データーベースに登録
                 return redirect(
                     'master:company_create_result',
                     symbol=company.symbol
                 )
             else:
-                # エラー内容を設定
                 form.add_error(None, "同じ会社が既に登録されています")
+
+
         
         # エラーの重複を外す
         unique_errors=errnote_check(form)

@@ -100,19 +100,17 @@ def stock_chart(request, symbol):
     # 株価データが存在しない場合
     if not prices.exists():
         # データなしページを表示
-        return render(
-            request,
-            "stocks/no_company.html",
-            {"company_name": company.name_en or company.name_j}  # 企業名（英語または日本語）
-        )
+        return render(request,'stocks/no_company.html',{
+            'company_name': company.name_en or company.name_jp
+        })
 
     # 株価データから日付リストを作成（年のみ抽出）
     labels = [p.date.strftime("%Y") for p in prices]
     # 株価データから終値リストを作成（float型に変換）
     close_prices = [float(p.close_price) for p in prices]
 
-    return render(request, "stocks/stock_chart.html", {
-        "company": company,                     # 選択した企業情報
-        "labels": json.dumps(labels),           # グラフ用：日付リスト（JSON文字列）
-        "prices": json.dumps(close_prices),     # グラフ用：株価リスト（JSON文字列）
+    return render(request, 'stocks/stock_chart.html', {
+        'company': company,                     # 選択した企業情報
+        'labels': json.dumps(labels),           # グラフ用：日付リスト（JSON文字列）
+        'prices': json.dumps(close_prices),     # グラフ用：株価リスト（JSON文字列）
     })

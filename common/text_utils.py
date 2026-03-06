@@ -34,3 +34,15 @@ def checker_text(text: str) -> str:
     cleaned_text = re.sub(r'[^\w\sぁ-んァ-ヶ一-龠]', '', normalized_text)
 
     return cleaned_text
+
+def errnote_check(form):
+    # setを使用することで重複をなくす
+    unique_errors = set()
+
+    # フィールドごとにエラーを取得
+    for field_errors in form.errors.values():
+        # エラーの値を取得
+        for error in field_errors:
+            unique_errors.add(error)
+    
+    return unique_errors

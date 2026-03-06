@@ -10,31 +10,27 @@ class CompanyForm(forms.ModelForm):
         validators=[
             RegexValidator(
                 regex=r'^[A-Za-z0-9 ]+$',
-                message='name_enは英字・数字・空白のみ入力可能です。'
+                message='会社名（英語）は英字・数字・空白のみ入力可能です。'
             )
         ]
     )
-
     class Meta:
         model = Company
-        fields = ['symbol', 'name_en', 'name_jp', 'industry', 'market', 'memo']
+        fields = ['name_en', 'name_jp', 'industry', 'market', 'memo']
         widgets = {
             'memo': forms.Textarea(attrs={'rows': 1}),
         }
-        labels = {
-            'symbol': '銘柄コード',
-            'name_jp': '会社名（日本語）',
-            'industry': '業界',
-            'market': '市場',
-            'memo': 'メモ',
-        }
-        
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def clean(self):
+        cleaned_data = super().clean()
+        name_en = cleaned_data.get("name_en")
+        name_jp = cleaned_data.get("name_jp")
 
-        # 銘柄コードは編集不可
-        self.fields['symbol'].disabled = True
-        
+        if not name_en and not name_jp:
+            raise forms.ValidationError(
+                "会社名（英語）または会社名（日本語）のどちらかを入力してください。"
+            )
+
+        return cleaned_data        
 
 class CompanySearchForm(forms.Form):
     name = forms.CharField(

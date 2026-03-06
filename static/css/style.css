@@ -20,6 +20,7 @@ body {
 /* ページ全体の最低画面サイズ */
 html,
 body {
+  width: 100%;
   min-height: 100%;
   overflow-x: hidden;
 }
@@ -330,13 +331,13 @@ body.inner-page main .content-wrapper {
   background-color: rgba(255, 255, 255, 0.95);
   padding: 20px 0;
   border-radius: 30px;
-  width: 1000px;
-  min-height: 250px;
+  width: 100%;
+  max-width: 1000px;
   margin: 0 auto;       /* 親要素を左右中央に配置する  */
 
   display: flex;        /* flexboxを使用して、子要素を左右中央に配置する  */
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
 }
 
 /* ページタイトル */
@@ -347,7 +348,7 @@ body.inner-page main .content-wrapper {
 
 /* 本文コンテンツ */
 .content {
-  width: auto;
+  width: 100%;
 }
 
 .main-message{
@@ -363,9 +364,10 @@ body.inner-page main .content-wrapper {
 /* Chart.js用チャートコンテナ */
 .chart-container {
   position: relative;
-  width: 800px;
+  width: 100%;
+  max-width: 650px;
   height: 400px;
-  margin: 20px auto;    /* 上下の隙間確保と左右中央に配置  */
+  margin: 0 auto;    /* 上下の隙間確保と左右中央に配置  */
 }
 
 /* メイン内リンク共通スタイル */
@@ -417,8 +419,10 @@ main ul {
 main form {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  margin: 0 auto;
   width: 100%;
+  max-width: 400px;
+
 }
 
 /* ラベルと入力欄を包む1行分(pタグ)の設定 */
@@ -478,7 +482,7 @@ main .form-notes {
   padding: 0;
   list-style: none;
   text-align: left;
-  font-size: 0.8em;
+  font-size: 0.7em;
   color: #666;
 }
 
@@ -492,7 +496,30 @@ main .err-notes {
 }
 
 .pagination{
-  margin: 20px;
+ display: grid;
+  grid-template-columns: 1fr auto 1fr;  
+  align-items: center;
+  gap: 20px;
+  width: 90%;
+  margin: 20px auto;
+}
+
+.prev {
+  text-align: right;
+}
+
+.page {
+  text-align: center;
+}
+
+.next {
+  text-align: left
+}
+
+@media (max-width: 1100px) and (min-width: 769px) {
+  main {
+    margin: 120px 30px;
+  }
 }
 
 /*
@@ -505,7 +532,7 @@ main .err-notes {
 footer {
   position: relative;
   width: 100%;
-  padding: 45px 0;
+  padding: 45px 0 0;
   background: #222;
   color: #fff;
   z-index: 1;               /* 背景画像より前面に出す */
@@ -559,6 +586,7 @@ footer {
 /* フッターボトム（コピーライト表示） */
 .footer-bottom {
   padding: 30px 0;
+  width: 100%;
   text-align: center;
   border-top: 1px solid #444;
   text-align: center;
@@ -639,15 +667,10 @@ footer {
   /* 入力欄 */
   .search-input {
     width: 100%;
-    max-width: none;
     padding: 10px;
   }
 
-  /* JSで使用 */
-  .search-input-field.is-active {
-    opacity: 1;
-    visibility: visible;
-  }
+
 
   /* スライドメニュー */
   .slide-menu {
@@ -679,7 +702,6 @@ footer {
 
   /* innerページ */
   body.inner-page main .content-wrapper {
-    min-height: 200px;
     width: 90%;
     padding: 0;
   }
@@ -688,8 +710,18 @@ footer {
   .chart-container {
     width: 100%;
     max-width: 100%;
-    height: 250px;
     margin: 0 auto;
+  }
+
+  main .page_link small{
+    display: flex; 
+    flex-direction: column;
+    margin: 20 auto;
+  }
+
+  .chart-container canvas {
+    width: 100%;
+    height: auto;
   }
 
   /* ページネーション */
@@ -720,6 +752,18 @@ footer {
   .footer-inner>div {
     width: 100%;
     max-width: 200px;
+    text-align: center;
+  }
+
+  .footer-inner>div h4 {
+    margin: 20px 0 0;
+    border-bottom: 3px solid #444;
+    padding-bottom: 5px;
+  }
+
+  .footer-inner>div ul {
+    font-size: 0.9em;
+    margin: 0;
   }
 
   .footer-bottom {

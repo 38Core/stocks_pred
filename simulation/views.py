@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect  
+from common.text_utils import errnote_check
 from decimal import Decimal, InvalidOperation  
 from stocks.models import StockPrice  
 from .forms import SimulationForm
@@ -9,7 +10,9 @@ import json
 def simulation_form(request):
     # フォームを作成（選択できる企業はユーザーがお気に入り企業に登録している企業のみ）
     form = SimulationForm(request.user)
-    return render(request, "simulation/simulation_form.html", {"form": form})
+    return render(request, 'simulation/simulation_form.html', {
+        'form': form
+    })
 
 
 # 日本円表記に変換（億・万・円単位）（シュミレーション結果で使用）
@@ -55,14 +58,19 @@ def simulation_result(request):
     
     if request.method != "POST":
         # GETの場合は、フォーム画面へリダイレクト
-        return redirect("simulation:simulation_form")
+        return redirect('simulation:simulation_form')
 
     # フォームのデータを取得
     form = SimulationForm(request.user, request.POST)
     
+    # エラーの場合、フォームを再表示
     if not form.is_valid():
-        # エラーの場合、フォームを再表示
-        return render(request, "simulation/simulation_form.html", {"form": form})
+        # エラーの重複を外す
+        unique_errors=errnote_check(form)
+        return render(request, 'simulation/simulation_form.html', {
+            'unique_errors': unique_errors,
+            'form': form
+        })   
 
     # フォームの値を取得
     company = form.cleaned_data["company"]                          # 企業
@@ -76,13 +84,9 @@ def simulation_result(request):
 
     # その企業の株価データがそもそも存在するかチェック
     if not StockPrice.objects.filter(company=company).exists():
-        return render(
-            request,
-            "simulation/simulation_result.html",
-            {
-                "error": f"{company_name}の株価データがありません。"
-            },
-        )
+        return render(request,'simulation/simulation_result.html',{
+            'error': f"{company_name}の株価データがありません。"
+        })
 
     # 開始日以降の株価データを取得
     qs = StockPrice.objects.filter(
@@ -101,13 +105,9 @@ def simulation_result(request):
 
     # データが空の場合はエラーを表示
     if not data:
-        return render(
-            request,
-            "simulation/simulation_result.html",
-            {
-                "error": f"指定された期間における、{company_name}の株価データが見つかりませんでした。"
-            },
-        )
+        return render(request,'simulation/simulation_result.html',{
+            'error': f"指定された期間における、{company_name}の株価データが見つかりませんでした。"
+        })
 
     # データを処理
     for row in data:
@@ -199,4 +199,4 @@ def simulation_result(request):
         "cash_dividend": format_currency_jp(cash_dividend),
     }
 
-    return render(request, "simulation/simulation_result.html", context)
+    return render(request, 'simulation/simulation_result.html', context)

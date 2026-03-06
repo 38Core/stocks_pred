@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block head %}<link rel="stylesheet" href="{% static 'customize/css/style.css' %}">{% endblock %}
 
 {% block title %}お気に入り会社一覧{% endblock %}
 {% block content_title %}<h3>お気に入りの会社一覧</h3>{% endblock %}
@@ -23,7 +25,7 @@
                 <td>{{ company.market.country.name }}</td>
 
                 <!-- お気に入り切替 -->
-                <td>
+                <td class="icon">
                     <a href="{% url 'customize:favorite' company.symbol %}">
                         {% if company.is_favorite %}
                             ❤️
@@ -34,7 +36,7 @@
                 </td>
             </tr>
             {% empty %}
-            <tr><td colspan="4">お気に入り企業はありません</td></tr>
+            <tr><td colspan="4">お気に入りに登録している会社はありません</td></tr>
             {% endfor %}
         </tbody>
     </table>

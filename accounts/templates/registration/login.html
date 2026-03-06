@@ -1,19 +1,39 @@
 {% extends 'base.html' %}
-{% load static %}
-
 
 {% block title %}ログイン{% endblock %}
 {% block content_title %}<h3>ログイン画面</h3>{% endblock %}
 
+
 {% block content %}
-<form method="post">
-    {% csrf_token %}
+    {% if form.errors %}
+        <ul class="err-notes">
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="{{ form.username.id_for_label }}">ユーザー名</label>
+            {{ form.username }}
+        </div>
 
-    {{ form.as_p }}
+        <div class="form-group">
+            <label for="{{ form.password.id_for_label }}">パスワード</label>
+            {{ form.password }}
+        </div>
 
-    <!-- ★ role を POST で保持 -->
-    <input type="hidden" name="role" value="{{ role }}">
-
-    <button type="submit">ログイン</button>
-</form>
+        <button type="submit">ログイン</button>
+    </form>
+    <div class="page_link ">
+        <small>
+            <a href="{% url 'home:index' %}">ホーム画面に戻る</a>
+        </small>
+    </div>
 {% endblock %}

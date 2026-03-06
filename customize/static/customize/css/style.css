@@ -1,0 +1,78 @@
+  /*
+==================================================
+   レスポンシブデザイン
+==================================================
+*/
+@media (max-width: 768px) {
+  /* テーブルレイアウトをカード型に強制変換 */
+  table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    display: block;     /* テーブル構造を解除 */
+    width: 100%;
+  }
+
+  /* ヘッダー行 */
+  thead { 
+    display: none;                    /* モバイル版では表示しない */
+  }
+
+  /* 行要素（1行ごとに1つのカードにする） */
+  tr {
+    background: #fff;
+    margin-bottom: 15px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;               /* お気に入りマークの基準点 */
+  }
+
+  /* セル */
+  td {
+    border: none !important;
+    padding: 4px 0 !important;
+    text-align: left;
+  }
+
+  /* 1番目のセル：会社名（日本語） */
+  td:nth-of-type(1) {
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding-right: 40px !important;   /* お気に入りマークとの距離を確保 */
+  }
+
+  td:nth-of-type(1) a {
+    text-decoration: none;
+    color: #0056b3;
+  }
+
+  /* 2番目のセル：会社名（英語） */
+  td:nth-of-type(2) {
+    font-size: 0.85rem;
+  }
+
+  td:nth-of-type(2) a {
+    text-decoration: none;
+    color: #666;
+  }
+
+  /* 3番目のセル：所在国 */
+  td:nth-of-type(3) {
+    font-size: 0.85rem;
+    color: #333;
+    margin-top: 5px;
+  }
+ 
+  /* アイコン */
+  td.icon {
+    position: absolute;     /* 通常のテーブル配置から外す */
+    top: 15px;              /* 上・右を指定して、アイコンを右上に表示 */
+    right: 15px;
+    width: auto;
+    font-size: 1.4rem;
+  }
+}
