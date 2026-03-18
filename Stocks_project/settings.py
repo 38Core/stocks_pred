@@ -11,8 +11,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
 import dj_database_url
 import os
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = ['stocks-pred.onrender.com', 'localhost', '127.0.0.1']
 
@@ -140,13 +142,12 @@ GMAIL_CLIENT_SECRET = os.environ['GMAIL_CLIENT_SECRET']
 GMAIL_REFRESH_TOKEN = os.environ['GMAIL_REFRESH_TOKEN']
 DEFAULT_FROM_EMAIL  = 'portfolio.stocks.pred@gmail.com'
 
-DEFAULT_FROM_EMAIL = 'portfolio.stocks.pred@gmail.com'  
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'False') == 'True'
+SESSION_COOKIE_SECURE = os.environ.get('SECURE_SSL_REDIRECT', 'False') == 'True'
+CSRF_COOKIE_SECURE = os.environ.get('SECURE_SSL_REDIRECT', 'False') == 'True'
 
 CSRF_TRUSTED_ORIGINS = [
     "https://stocks-pred.onrender.com",

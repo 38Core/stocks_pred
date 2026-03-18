@@ -9,7 +9,6 @@
 
 {% block content %}
     <p class="inner-title">どれか一つを入力してください</p>
-    <br>
  
     <form method="get" class="search-form">
         {{ form.name }}
@@ -65,13 +64,11 @@
                     <a href="javascript:void(0);">
                         <i class="fa-solid fa-ellipsis-vertical mag-icon"></i>
                     </a>
-                    <!-- <div class="company-menu"> -->
                         <ul class="menu-list">              
                             <li><a href="{% url 'master:company_read' company.symbol %}">詳細</a></li>
                             <li><a href="{% url 'master:company_update' company.symbol %}">変更</a></li>
                             <li><a href="{% url 'master:company_delete' company.symbol %}">一覧から外す</a></li>
                         </ul>
-                    <!-- </div> -->
                 </td>
             </tr>
             {% empty %}

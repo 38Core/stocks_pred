@@ -106,7 +106,7 @@ main form button:hover {
     display: flex;              /* 横方向に配置 */
     flex-direction: row;
     gap: 15px;
-    margin: 0 auto 20px;
+    margin: 0 auto;
     padding: 20px 0;
     justify-content: center;    /* 子要素を左右中央に配置 */
     width: 90%;

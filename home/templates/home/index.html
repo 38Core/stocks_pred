@@ -28,16 +28,18 @@
         </div>
 
         <div class="home-grid2-1">
-                選択中の企業：
-                {% for company in companies %}
-                        {% if company.symbol == symbol %}
-                                {% if company.name_jp %}
-                                        {{ company.name_jp }}
-                                {% else %}
-                                        <p>{{ company.name_en }}</p>
+                <p>
+                        選択中の企業：
+                        {% for company in companies %}
+                                {% if company.symbol == symbol %}
+                                        {% if company.name_jp %}
+                                                {{ company.name_jp }}
+                                        {% else %}
+                                                {{ company.name_en }}
+                                        {% endif %}
                                 {% endif %}
-                        {% endif %}
-                {% endfor %}
+                        {% endfor %}
+                </p>
 
                 <section class="chart-container">
                         <canvas 

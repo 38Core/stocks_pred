@@ -180,6 +180,7 @@ def contact(request):
 
                 # メール送信でエラーが発生した場合の処理
                 except Exception as e:
+                    print("メール送信エラー:", e) 
 
                     # セッションに保存されていたデータでフォームを再作成
                     form = ContactForm(initial=data)
